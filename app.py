@@ -405,6 +405,8 @@ def filter_leads(
 # ENTRY POINT
 # ─────────────────────────────────────────────
 if __name__ == "__main__":
+    import os
+
     # 1. Run the pipeline immediately on startup
     run_pipeline()
 
@@ -413,6 +415,7 @@ if __name__ == "__main__":
     scheduler_thread.start()
     log.info("Background scheduler started (interval: 24 h)")
 
-    # 3. Launch the API server
-    log.info("Starting API server at http://0.0.0.0:8000")
-    uvicorn.run(app, host="0.0.0.0", port=8000, log_level="warning")
+    # 3. Launch the API server (PORT env var is set by Render automatically)
+    port = int(os.environ.get("PORT", 8000))
+    log.info("Starting API server at http://0.0.0.0:%d", port)
+    uvicorn.run(app, host="0.0.0.0", port=port, log_level="warning")
